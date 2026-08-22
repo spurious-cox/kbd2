@@ -1,0 +1,13 @@
+# py2app leavings
+build/
+dist/
+__pycache__/
+*.pyc
+
+# Generated from icon/KBDIcon_source.png by make_icon.py
+icon/KBD2.iconset/
+icon/KBD2.icns
+icon/KBD2_1024.png
+
+# local editing backups
+*.bak-*
