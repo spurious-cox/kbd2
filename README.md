@@ -4,10 +4,10 @@ A floating alphanumeric keyboard for macOS. It sits above every window, on
 every Space, and types into whatever text field currently has focus — in any
 application.
 
-The full-keyboard sibling of [KBD](../KBD), which does the same job for a
+The full-keyboard sibling of [KBD](https://github.com/spurious-cox/kbd), which does the same job for a
 numeric keypad.
 
-![KBD2](icon/KBD2_1024.png)
+![KBD2](icon/KBD2Icon_source.png)
 
 ## What it does
 
@@ -26,6 +26,10 @@ numeric keypad.
 - **Drag it anywhere** on the coloured field, header included.
 - **Resize** by the corner grip, by option-dragging, or from the size menu.
   The whole keyboard scales as one.
+- **Transparent by default.** Nothing is painted behind the keys, so the gaps
+  show whatever is underneath. Dragging still works in those gaps — hit
+  testing goes by frame, not by alpha. **Show Backing** on the menu restores a
+  solid field, and the choice is remembered.
 - **Nine key colours**, from the `•••` at either end of the header or from a
   right-click anywhere. The colour lands on the key faces, the legends flip to
   whatever contrasts, and the field takes a darkened version of the same hue.
@@ -37,8 +41,14 @@ Five rows on a fourteen-column grid, modelled on a physical Mac keyboard.
 Every key is one column wide except SHIFT and RETURN (two each) and the space
 bar, which takes what is left of row five beside the globe.
 
-The globe key opens **Emoji & Symbols** — macOS has no other keyboard to
-switch to, and a key that did nothing would read as broken.
+**DISMISS** sits at the right of the bottom row, two columns wide like the
+RETURN above it, and quits the app.
+
+The **globe** lists the other keyboard layouts macOS has enabled and switches
+to the one you pick. With only one enabled — the usual Mac — there is nothing
+to switch to, so it says **"no keyboards found"** in the header for a few
+seconds and changes nothing. The message goes in the header rather than an
+alert: a dialog would take focus off the field being typed into.
 
 ## Accessibility permission
 
@@ -64,6 +74,12 @@ py2app in step:
 
 `APP_VERSION` in `kbd2.py` is the single source of truth for the version;
 `setup.py` reads it, and the app draws it in its own header.
+
+The icon and the header mark are both built from `icon/KBD2Icon_source.png`,
+Tim's own artwork, which already contains the 2 — nothing is composed beside
+it. Opacity is recovered from the darkest channel rather than luminance:
+luminance is right for black ink and wrong for coloured ink, and the magenta
+came out only ~62% opaque the first time.
 
 ### Checking the layout without launching it
 
