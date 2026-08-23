@@ -21,8 +21,8 @@ numeric keypad.
   off and both revert. The engaged key fills with a lighter face, and each key
   draws its live legend bright with the other dimmed, so the state is readable
   key by key.
-- **`^` `⌥` `⌘` latch the same way** — tap one on, it applies to every key
-  until tapped off. All four modifiers behave alike by design.
+- **Cursor keys and forward delete** — `←` `→` step the insertion point and
+  `⌦` deletes ahead of it, all through the keyboard itself.
 - **Drag it anywhere** on the coloured field, header included.
 - **Resize** by the corner grip, by option-dragging, or from the size menu.
   The whole keyboard scales as one.
@@ -37,12 +37,29 @@ numeric keypad.
 
 ## Layout
 
-Five rows on a fourteen-column grid, modelled on a physical Mac keyboard.
-Every key is one column wide except SHIFT and RETURN (two each) and the space
-bar, which takes what is left of row five beside the globe.
+Five rows on a fourteen-column grid. Every key is one column wide except
+SHIFT, RETURN and DISMISS (two each) and the space bar, which takes what is
+left of row five beside the globe.
 
-**DISMISS** sits at the right of the bottom row, two columns wide like the
-RETURN above it, and quits the app.
+```
+~  1  2  3  4  5  6  7  8  9  0  -  =  ⌫
+q  w  e  r  t  y  u  i  o  p  [  ]  \  ⌦
+⇪⇪    a  s  d  f  g  h  j  k  l  ,  ;  '
+⇥  ←  →  z  x  c  v  b  n  m  .  /  ↩↩
+🌐    ␣ ␣ ␣ ␣ ␣ ␣ ␣ ␣ ␣ ␣ ␣    DISMISS
+```
+
+**Rows one to four are the same layout as the iOS version of KBD2, key for
+key and column for column**, so nothing moves between a Mac, an iPad and an iPhone. That
+match is why there are no `^` `⌥` `⌘` keys: an iOS keyboard extension reaches
+the text field only through `UITextDocumentProxy`, which cannot send
+modifiers, so those three slots carry the cursor keys instead. **KBD2 cannot
+send ⌘C or any other shortcut** — use the hardware keyboard for those.
+
+Row five is the one deliberate difference between the two. iOS has no globe of
+its own to place and an extension cannot quit itself, so there it carries the
+space bar alone; on the Mac it holds the globe, the space bar and **DISMISS**,
+which is two columns wide like the RETURN above it and quits the app.
 
 The **globe** lists the other keyboard layouts macOS has enabled and switches
 to the one you pick. With only one enabled — the usual Mac — there is nothing

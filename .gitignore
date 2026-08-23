@@ -11,3 +11,6 @@ icon/KBD2_1024.png
 
 # local editing backups
 *.bak-*
+
+# macOS
+.DS_Store

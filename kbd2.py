@@ -37,6 +37,17 @@ Accessibility) so the app is allowed to post keyboard events, exactly as KBD
 does, and asks for it the same way.
 
 History:
+  1.5.0  THE LAYOUT NOW MATCHES THE iOS KEYBOARD, at Tim's ask, so a key is
+         in the same place on his Mac as on his iPad and iPhone. Row two
+         starts at Q and closes with forward delete; row four gives up the
+         three modifiers ^ ⌥ ⌘ -- iOS has none to offer -- and takes TAB
+         (down from row two, into the slot iOS fills with its globe) plus
+         cursor left and right. **Losing ⌘ means this keyboard can no longer
+         send ⌘C and the like; that was Tim's call, made knowingly.** Row
+         five is untouched by his instruction: globe, space bar, DISMISS,
+         where they have always been. The space bar also gains the one thing
+         it never had -- the open box legend, SF Symbol "space" -- so it
+         reads as a key rather than a blank strip.
   1.4.0  The globe key now does what its glyph promises: it lists the other
          keyboard input sources macOS has enabled and switches to the one
          picked. With only one enabled -- the usual Mac -- there is nothing
@@ -148,7 +159,7 @@ from ApplicationServices import (
 
 # ---------------------------------------------------------------- constants
 
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.5.0"
 CREDIT_TEXT = "(c) 2026 Tim McCoy"
 DEFAULTS_ORIGIN_KEY = "KBD2PanelOrigin"
 DEFAULTS_COLOR_KEY = "KBD2KeyColor"
@@ -171,6 +182,10 @@ KEYCODE_RETURN = 36
 KEYCODE_TAB = 48
 KEYCODE_SPACE = 49
 KEYCODE_DELETE = 51
+# 1.5.0, for the iOS arrangement: forward delete and the two cursor keys.
+KEYCODE_FORWARD_DELETE = 117
+KEYCODE_LEFT = 123
+KEYCODE_RIGHT = 124
 
 # Sentinels. No virtual keycode is negative, so these can never collide.
 TAG_SHIFT = -1
@@ -195,15 +210,22 @@ TAG_SIZE_BASE = 100
 # ------------------------------------------------------------------ layout
 #
 # Five rows on a fourteen-column grid. Every key is exactly one column wide
-# except SHIFT (two, so row three closes exactly) and the space bar (the rest
-# of row five beside the globe) -- Tim asked for keys as uniform as possible,
-# and on a fourteen-column grid those two are the only ones that cannot be.
+# except SHIFT and RETURN and DISMISS (two each) and the space bar (the rest
+# of row five beside the globe) -- Tim asked for keys as uniform as possible.
+#
+# SINCE 1.5.0 ROWS ONE TO FOUR ARE THE iOS LAYOUT, key for key and column for
+# column, so nothing moves between Tim's Mac, iPad and iPhone. Row five is the
+# one deliberate difference: iOS has no globe to place and cannot dismiss
+# itself, so it carries the space bar alone, while the Mac keeps globe, space
+# and DISMISS. The only key kind iOS has no use for is "mod" -- it is left in
+# the code, unused by any row, rather than torn out.
 #
 # A key is (lower, upper, keycode, kind):
 #   "dual"   both legends drawn, upper sent when the shift lock is on
 #   "alpha"  one legend, drawn lowercase until the shift lock is on
-#   "glyph"  one symbol, no shift meaning (tab, delete, return, space)
-#   "mod"    latches instead of typing
+#   "glyph"  one symbol, no shift meaning (tab, delete, return, cursor keys)
+#   "symbol" an SF Symbol, tinted like text (the globe and the space bar)
+#   "mod"    latches instead of typing -- no row uses this since 1.5.0
 #
 ROWS = [
     [("`", "~", KEYCODES["`"], "dual"),
@@ -221,8 +243,10 @@ ROWS = [
      ("=", "+", KEYCODES["="], "dual"),
      ("⌫", None, KEYCODE_DELETE, "glyph")],
 
-    [("⇥", None, KEYCODE_TAB, "glyph"),
-     ("q", None, KEYCODES["q"], "alpha"),
+    # Row two starts at Q, as it does on iOS -- the tab key moved down to
+     # row four, into the slot iOS gives the globe. Forward delete closes the
+     # row on both platforms.
+    [("q", None, KEYCODES["q"], "alpha"),
      ("w", None, KEYCODES["w"], "alpha"),
      ("e", None, KEYCODES["e"], "alpha"),
      ("r", None, KEYCODES["r"], "alpha"),
@@ -234,7 +258,8 @@ ROWS = [
      ("p", None, KEYCODES["p"], "alpha"),
      ("[", "{", KEYCODES["["], "dual"),
      ("]", "}", KEYCODES["]"], "dual"),
-     ("\\", "|", KEYCODES["\\"], "dual")],
+     ("\\", "|", KEYCODES["\\"], "dual"),
+     ("⌦", None, KEYCODE_FORWARD_DELETE, "glyph")],
 
     [("⇪", None, TAG_SHIFT, "mod"),
      ("a", None, KEYCODES["a"], "alpha"),
@@ -250,9 +275,15 @@ ROWS = [
      (";", ":", KEYCODES[";"], "dual"),
      ("'", "\"", KEYCODES["'"], "dual")],
 
-    [("^", None, TAG_CONTROL, "mod"),
-     ("⌥", None, TAG_OPTION, "mod"),
-     ("⌘", None, TAG_COMMAND, "mod"),
+    # 1.5.0: ^ ⌥ ⌘ are gone, at Tim's ask to match the iOS layout, which has
+     # no modifiers to give. iOS puts the globe, cursor left and cursor right
+     # in these three slots; the Mac keeps its globe down in row five, so the
+     # vacated slot takes the TAB key that row two gave up -- which keeps
+     # every letter in the same column as iOS, and keeps a key the Mac can
+     # genuinely send and iOS cannot.
+    [("⇥", None, KEYCODE_TAB, "glyph"),
+     ("←", None, KEYCODE_LEFT, "glyph"),
+     ("→", None, KEYCODE_RIGHT, "glyph"),
      ("z", None, KEYCODES["z"], "alpha"),
      ("x", None, KEYCODES["x"], "alpha"),
      ("c", None, KEYCODES["c"], "alpha"),
@@ -265,7 +296,11 @@ ROWS = [
      ("↩", None, KEYCODE_RETURN, "glyph")],
 
     [("globe", None, TAG_GLOBE, "symbol"),
-     ("", None, KEYCODE_SPACE, "glyph"),
+     # 1.5.0: the space bar carries the OPEN BOX now. It was the one key
+     # with no legend at all, which left it reading as a blank strip rather
+     # than as a key; SF Symbols has "space" for exactly this, so it goes
+     # through the symbol path and is tinted and centred like any other.
+     ("space", None, KEYCODE_SPACE, "symbol"),
      ("DISMISS", None, TAG_DISMISS, "action")],
 ]
 
@@ -1180,7 +1215,10 @@ class KeypadController(NSObject):
             y = top_of_rows - KEY_H * (row_index + 1) - ROW_GAP * row_index
             x = MARGIN
             for spec_index, (lower, upper, tag, kind) in enumerate(row):
-                if tag == KEYCODE_SPACE and kind == "glyph" and row_index == len(ROWS) - 1:
+                # Match on the TAG, not the kind: 1.5.0 made the space bar a
+                # "symbol" key so it could carry the open box, and keying this
+                # off "glyph" would have silently shrunk it to one column.
+                if tag == KEYCODE_SPACE and row_index == len(ROWS) - 1:
                     # The space bar is the one key whose width is a remainder
                     # rather than a column count: it takes what is left after
                     # everything that FOLLOWS it in the row has been allowed
