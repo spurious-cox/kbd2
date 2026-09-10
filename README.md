@@ -27,9 +27,8 @@ numeric keypad.
 - **Resize** by the corner grip, by option-dragging, or from the size menu.
   The whole keyboard scales as one.
 - **Transparent by default.** Nothing is painted behind the keys, so the gaps
-  show whatever is underneath. Dragging still works in those gaps — hit
-  testing goes by frame, not by alpha. **Show Backing** on the menu restores a
-  solid field, and the choice is remembered.
+  show whatever is underneath; dragging still works in them. **Show Backing**
+  restores a solid field.
 - **Nine key colours**, from the `•••` at either end of the header or from a
   right-click anywhere. The colour lands on the key faces, the legends flip to
   whatever contrasts, and the field takes a darkened version of the same hue.
@@ -62,10 +61,8 @@ space bar alone; on the Mac it holds the globe, the space bar and **DISMISS**,
 which is two columns wide like the RETURN above it and quits the app.
 
 The **globe** lists the other keyboard layouts macOS has enabled and switches
-to the one you pick. With only one enabled — the usual Mac — there is nothing
-to switch to, so it says **"no keyboards found"** in the header for a few
-seconds and changes nothing. The message goes in the header rather than an
-alert: a dialog would take focus off the field being typed into.
+to the one you pick. With only one enabled it says **"no keyboards found"** in
+the header and changes nothing.
 
 ## Accessibility permission
 
@@ -89,14 +86,8 @@ py2app in step:
 ./release.sh                            # notarize + staple, and build a DMG
 ```
 
-`APP_VERSION` in `kbd2.py` is the single source of truth for the version;
-`setup.py` reads it, and the app draws it in its own header.
-
-The icon and the header mark are both built from `icon/KBD2Icon_source.png`,
-Tim's own artwork, which already contains the 2 — nothing is composed beside
-it. Opacity is recovered from the darkest channel rather than luminance:
-luminance is right for black ink and wrong for coloured ink, and the magenta
-came out only ~62% opaque the first time.
+`APP_VERSION` in `kbd2.py` is the single source of truth for the version.
+The icon and the header mark are both built from `icon/KBD2Icon_source.png`.
 
 ### Checking the layout without launching it
 
@@ -104,10 +95,8 @@ came out only ~62% opaque the first time.
 KBD2_SKIP_AX_PROMPT=1 ../KBD/venv/bin/python render_test.py out.png [colour] [scale] [shift]
 ```
 
-Renders the panel straight to a PNG and exits, leaving no app instance
-running and needing no screen-recording permission. It also prints each row's
-key count and total span, so a misaligned key shows up as a number rather
-than only as a picture — every row should span exactly the same width.
+Renders the panel straight to a PNG and exits. It also prints each row's key
+count and total span — every row should span the same width.
 
 ## Licence
 
