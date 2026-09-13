@@ -67,8 +67,8 @@ def load_mask():
     """Opacity recovered from how far each pixel is from WHITE.
 
     v2.0.0 used luminance, which is right for black ink and wrong for
-    coloured ink: Tim's magenta has a luminance around 97, so it came out
-    only ~62% opaque and the icon looked washed out. The darkest channel is
+    colored ink: a saturated hue reads as fairly light, so it is rendered
+    too transparent and the icon looks washed out. The darkest channel is
     the honest measure of "how much ink is here" for any hue on white.
     """
     source = Image.open(SOURCE).convert("RGB")
