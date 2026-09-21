@@ -101,3 +101,7 @@ count and total span — every row should span the same width.
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
+
+## Problems or suggestions
+
+Open an issue: https://github.com/spurious-cox/kbd2/issues
