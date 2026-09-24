@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Build, sign and install KBD2.app — v1.0.0
+# Build, sign and install KBD2.app — v1.1.0
 #
 # Borrows KBD's venv (../KBD/venv): the two apps need the same PyObjC and
 # py2app, and a second copy would be one more thing to keep in step.
@@ -43,6 +43,11 @@ sleep 1
 echo "==> building"
 rm -rf build dist
 ../KBD/venv/bin/python setup.py py2app >/dev/null
+
+# macOS 26+ draws an app that has only an .icns shrunk onto a plain plate.
+# The Icon Composer document compiles into Assets.car, which macOS 26+ uses
+# instead; the .icns from setup.py is still what macOS 13-25 show.
+~/bin/glass_icon dist/KBD2.app icon/AppIcon.icon
 
 echo "==> signing inner binaries with the hardened runtime"
 find dist/KBD2.app -type f -print0 2>/dev/null | while IFS= read -r -d $'\0' f; do

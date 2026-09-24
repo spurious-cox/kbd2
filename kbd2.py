@@ -37,6 +37,8 @@ Accessibility) so the app is allowed to post keyboard events, exactly as KBD
 does, and asks for it the same way.
 
 History:
+  1.5.1  The icon is also an Icon Composer icon, so macOS 26 and later draw it
+         full size with the system's own shape, not shrunk onto a plate.
   1.5.0  THE LAYOUT NOW MATCHES THE iOS KEYBOARD, at Tim's ask, so a key is
          in the same place on his Mac as on his iPad and iPhone. Row two
          starts at Q and closes with forward delete; row four gives up the
@@ -159,7 +161,7 @@ from ApplicationServices import (
 
 # ---------------------------------------------------------------- constants
 
-APP_VERSION = "1.5.0"
+APP_VERSION = "1.5.1"
 CREDIT_TEXT = "(c) 2026 Tim McCoy"
 DEFAULTS_ORIGIN_KEY = "KBD2PanelOrigin"
 DEFAULTS_COLOR_KEY = "KBD2KeyColor"
