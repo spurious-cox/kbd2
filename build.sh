@@ -60,7 +60,11 @@ codesign --force --timestamp --options runtime \
     --entitlements kbd2.entitlements --sign "$SIGN_ID" dist/KBD2.app
 codesign --verify --deep --strict dist/KBD2.app
 
-if [[ "$1" == "--install" ]]; then
+# Installing is the DEFAULT. It used to need --install, and the failure
+# that caused is silent: the build succeeds, /Applications keeps the old
+# version, and everything downstream looks like it worked. Pass --no-install
+# to build without touching /Applications.
+if [[ "$1" != "--no-install" ]]; then
     echo "==> installing to /Applications"
     rm -rf /Applications/KBD2.app
     cp -R dist/KBD2.app /Applications/
